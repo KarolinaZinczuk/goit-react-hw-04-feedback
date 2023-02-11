@@ -6,23 +6,33 @@ import Section from "./Section/Section";
 import Notification from './Notification/Notification';
 
 export const App = () => {
-  const [state, setState] = useState({ good: 0, neutral: 0, bad: 0 });
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
   const onLeaveFeedback = name => {
-    setState(state => ({ ...state, [name]: state[name] + 1 }));
+    switch (name) {
+      case 'good':
+        setGood(good + 1);
+        break;
+      case 'neutral':
+        setNeutral(neutral + 1);
+        break;
+      case 'bad':
+        setBad(bad + 1);
+        break;
+    }
   };
 
   const countTotalFeedback = () => {
-    const { good, neutral, bad } = state;
     return good + neutral + bad;
   };
 
   const countPositiveFeedbackPercentage = () => {
-    const { good } = state;
     return Math.round((good / countTotalFeedback()) * 100);
   };
 
-  const options = Object.keys(state);
+  const options = Object.keys({good, neutral, bad});
 
   return (
     <>
@@ -36,7 +46,9 @@ export const App = () => {
       <Section title='Statistics'>
         {countTotalFeedback() ? (
           <Statistics
-            state={state}
+            good={good}
+            neutral={neutral}
+            bad={bad}
             total={countTotalFeedback()}
             positivePercentage={countPositiveFeedbackPercentage()}
           />
